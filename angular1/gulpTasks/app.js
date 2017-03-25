@@ -3,6 +3,7 @@ const concat = require('gulp-concat')
 const htmlmin = require('gulp-htmlmin')
 const uglify = require('gulp-uglify')
 const uglifycss = require('gulp-uglifycss')
+const babel  = require('gulp-babel')
 
 gulp.task('app', ['app.html', 'app.css', 'app.js', 'app.assets'])
 
@@ -21,7 +22,10 @@ gulp.task('app.css', () => {
 
 gulp.task('app.js', () => {
   gulp.src('app/**/*.js')
-    .pipe(uglify())
+    .pipe(babel({ presets: ['es2015'] }))
+    .pipe(uglify().on('error', (e) => {
+      console.error(e)
+    }))
     .pipe(concat('app.min.js'))
     .pipe(gulp.dest('public/assets/js'))
 })
